@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Req, Param, Delete, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Req, Param, Delete, Patch, Body } from '@nestjs/common';
 import {Request} from 'express'
 import { CustomerService } from './customer.service';
+import { CustomerDto } from './dto/cutomer.dto';
 
 @Controller('customers')
 export class CustomerController {
@@ -12,8 +13,8 @@ export class CustomerController {
     }
     
     @Post('/')
-    create(@Req() req: Request) {
-        return this.customerService.create(req)
+    create(@Body() body: CustomerDto) {
+        return this.customerService.create(body)
     }
 
     @Delete('/:id')
@@ -22,7 +23,7 @@ export class CustomerController {
     }
 
     @Patch('/:id')
-    update(@Req() req: Request, @Param() param: any) {
-        return this.customerService.update(param.id, req.body)
+    update(@Body() body: CustomerDto, @Param() param: any) {
+        return this.customerService.update(param.id, body)
     }
 }

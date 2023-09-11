@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {Request} from 'express'
+import { CustomerDto } from './dto/cutomer.dto';
 
 @Injectable()
 export class CustomerService {
@@ -7,8 +7,8 @@ export class CustomerService {
         return "all customers listing";
     }
 
-    create(req: Request) {
-        return req.body;
+    create(body: CustomerDto) {
+        return body;
     }
 
     delete(id) {
