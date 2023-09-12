@@ -1,7 +1,5 @@
-
-
 export class CustomerDto {
-    name: string
+  name: string;
 
-    contact: string
+  contact: string;
 }
