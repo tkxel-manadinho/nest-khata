@@ -3,6 +3,7 @@ import { CustomerDto } from './dto/cutomer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './entity/customer.entity';
 import { Repository } from 'typeorm';
+import { ApiResponse } from 'src/response.dto';
 
 @Injectable()
 export class CustomerService {
@@ -18,8 +19,16 @@ export class CustomerService {
    *
    * @author Muhammad Imran Israr <imran.muhammad@camp1.tkxel.com>
    */
-  all(): Promise<Customer[]> {
-    return this.customerRepository.find();
+  async all(): Promise<ApiResponse<Array<any>>> {
+    const data = await this.customerRepository.find();
+
+    const response: ApiResponse<Array<any>> = {
+      success: true,
+      message: 'success',
+      data,
+    };
+
+    return response;
   }
 
   /**
@@ -30,8 +39,16 @@ export class CustomerService {
    *
    * @author Muhammad Imran Israr <imran.muhammad@camp1.tkxel.com>
    */
-  find(id: number): Promise<Customer> {
-    return this.customerRepository.findOneBy({ id });
+  async find(id: number): Promise<ApiResponse<Customer>> {
+    const data = await this.customerRepository.findOneBy({ id });
+
+    const response: ApiResponse<Customer> = {
+      success: true,
+      message: 'success',
+      data,
+    };
+
+    return response;
   }
 
   /**
@@ -42,8 +59,28 @@ export class CustomerService {
    *
    * @author Muhammad Imran Israr <imran.muhammad@camp1.tkxel.com>
    */
-  create(body: CustomerDto): Promise<Customer> {
-    return this.customerRepository.save(body);
+  async create(body: CustomerDto): Promise<ApiResponse<null>> {
+    try {
+      await this.customerRepository.save(body);
+      const response: ApiResponse<null> = {
+        success: true,
+        message: 'User created',
+        data: null,
+      };
+
+      return response;
+    } catch (error) {
+      // add any logger to log error
+      console.log('=== CUSTOMER_CREATE_ERR', error);
+
+      const response: ApiResponse<null> = {
+        success: false,
+        message: error.message,
+        data: null,
+      };
+
+      return response;
+    }
   }
 
   /**
@@ -54,14 +91,28 @@ export class CustomerService {
    *
    * @author Muhammad Imran Israr <imran.muhammad@camp1.tkxel.com>
    */
-  delete(id): boolean {
+  async delete(id): Promise<ApiResponse<null>> {
     try {
-      this.customerRepository.delete(id);
+      await this.customerRepository.delete(id);
 
-      return true;
+      const response: ApiResponse<null> = {
+        success: true,
+        message: 'User deleted',
+        data: null,
+      };
+
+      return response;
     } catch (error) {
       // add any logger to log error
       console.log('=== CUSTOMER_DELETE_ERR', error);
+
+      const response: ApiResponse<null> = {
+        success: true,
+        message: error.message,
+        data: null,
+      };
+
+      return response;
     }
   }
 
@@ -74,14 +125,28 @@ export class CustomerService {
    *
    * @author Muhammad Imran Israr <imran.muhammad@camp1.tkxel.com>
    */
-  update(id, body): boolean {
+  async update(id, body): Promise<ApiResponse<null>> {
     try {
-      this.customerRepository.update({ id }, { ...body });
+      await this.customerRepository.update({ id }, { ...body });
 
-      return true;
+      const response: ApiResponse<null> = {
+        success: true,
+        message: 'User updated',
+        data: null,
+      };
+
+      return response;
     } catch (error) {
       // add any logger to log error
       console.log('=== CUSTOMER_UPDATE_ERR', error);
+
+      const response: ApiResponse<null> = {
+        success: true,
+        message: error.message,
+        data: null,
+      };
+
+      return response;
     }
   }
 }
